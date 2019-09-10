@@ -14,9 +14,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{
 		ConsoleApp1\App.config = ConsoleApp1\App.config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeopleSearch.Data.EDM", "PeopleSearch.Data.EDM\PeopleSearch.Data.EDM.csproj", "{7A9C7888-5394-4AF2-87CA-4361F9ACF206}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeopleSearch.Shell", "PeopleSearch.Shell\PeopleSearch.Shell.csproj", "{22F1D96C-32E3-4A0B-AFCF-2733CAC7FD57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeopleSearch.Data.EDM", "PeopleSearch.Data.EDM\PeopleSearch.Data.EDM.csproj", "{7A9C7888-5394-4AF2-87CA-4361F9ACF206}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeopleSearch.PeopleModule", "PeopleSearch.PeopleModule\PeopleSearch.PeopleModule.csproj", "{A9CEDCAE-4DA3-4B6B-A111-629A7FA116D0}"
 EndProject
