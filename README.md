@@ -1,3 +1,2 @@
 # HealthCatalyst
-Health Catalyst - People Search Application
-
+People Search Application
