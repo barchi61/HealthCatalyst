@@ -57,9 +57,8 @@ namespace PeopleSearch.PeopleModule.Services
                         break;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                int x = 0;
             }
 
             ObservableCollection<People> peopleCollection = new ObservableCollection<People>(list);
