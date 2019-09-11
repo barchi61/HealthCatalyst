@@ -17,6 +17,14 @@ namespace PeopleSearch.Shell
     {
         protected override Window CreateShell()
         {
+            var assemblyPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            var rootPath = assemblyPath.Replace(@"\PeopleSearch\PeopleSearch.Shell\bin\Debug", "");
+            var dataPath = Path.Combine(rootPath, @"Data\People.db");
+            var imagePath = Path.Combine(rootPath, @"Images\");
+
+            ApplicationSettings.DataPath = dataPath;
+            ApplicationSettings.ImagePath = imagePath;
+
             return Container.Resolve<MainWindow>();
         }
 

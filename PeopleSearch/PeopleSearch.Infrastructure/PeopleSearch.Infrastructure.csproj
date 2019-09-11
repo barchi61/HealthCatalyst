@@ -101,6 +101,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegionNames.cs" />
+    <Compile Include="Services\ApplicationSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Behaviors\Block.xaml">

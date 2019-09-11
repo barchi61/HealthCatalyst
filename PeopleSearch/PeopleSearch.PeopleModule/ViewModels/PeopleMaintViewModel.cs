@@ -1,5 +1,6 @@
 ﻿using PeopleSearch.Data.EDM;
 using PeopleSearch.Infrastructure.Interfaces;
+using PeopleSearch.Infrastructure.Services;
 using PeopleSearch.PeopleModule.Services;
 using Prism.Commands;
 using Prism.Events;
@@ -126,7 +127,7 @@ namespace PeopleSearch.PeopleModule.ViewModels
                 BitmapImage image = new BitmapImage();
                 image.BeginInit();
                 image.CacheOption = BitmapCacheOption.OnLoad;
-                image.UriSource = new Uri(CurrentItem.ImagePath);
+                image.UriSource = new Uri(Path.Combine(ApplicationSettings.ImagePath, CurrentItem.ImagePath));
                 image.EndInit();
                 PeopleImage = image;
                 image = null;
@@ -170,19 +171,18 @@ namespace PeopleSearch.PeopleModule.ViewModels
             {
                 var filePath = openFileDialog.FileName;
                 var fileExtension = Path.GetExtension(filePath);
-                var imagePath = ModuleInit.ImagePath;
 
                 if (CurrentItem.ImagePath != null && CurrentItem.ImagePath != string.Empty)
                 {
-                    var oldFilePath = Path.Combine(imagePath, String.Format("{0}", CurrentItem.ImagePath));
+                    var oldFilePath = Path.Combine(ApplicationSettings.ImagePath, String.Format("{0}", CurrentItem.ImagePath));
 
                     if (File.Exists(oldFilePath))
                         File.Delete(oldFilePath);
                 }
 
                 var newFileName = DateTime.Now.ToString("yyyyMMddHHmmss");
-                var newFilePath = Path.Combine(imagePath, String.Format("{0}.{1}", newFileName, fileExtension));
-                CurrentItem.ImagePath = newFilePath;
+                var newFilePath = Path.Combine(ApplicationSettings.ImagePath, String.Format("{0}.{1}", newFileName, fileExtension));
+                CurrentItem.ImagePath = String.Format("{0}.{1}", newFileName, fileExtension);
 
                 File.Copy(filePath, newFilePath);
                 DataService.SaveChanges(CurrentItem);

@@ -11,18 +11,6 @@ namespace PeopleSearch.PeopleModule
 {
     public class ModuleInit : IModule
     {
-        private static string _imagePath;
-        public static string ImagePath
-        {
-            get
-            {
-                var assemblyPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-                var rootPath = assemblyPath.Replace(@"\PeopleSearch\PeopleSearch.Shell\bin\Debug", "");
-                _imagePath = Path.Combine(rootPath, @"Images");
-                return _imagePath;
-            }
-        }
-
         public void OnInitialized(IContainerProvider containerProvider)
         {
             var regionManager = containerProvider.Resolve<IRegionManager>();

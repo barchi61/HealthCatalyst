@@ -1,6 +1,7 @@
 ﻿using PeopleSearch.Data.EDM;
 using PeopleSearch.Infrastructure;
 using PeopleSearch.Infrastructure.Interfaces;
+using PeopleSearch.Infrastructure.Services;
 using PeopleSearch.PeopleModule.Services;
 using Prism.Commands;
 using Prism.Events;
@@ -9,6 +10,7 @@ using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -141,7 +143,7 @@ namespace PeopleSearch.PeopleModule.ViewModels
                 BitmapImage image = new BitmapImage();
                 image.BeginInit();
                 image.CacheOption = BitmapCacheOption.OnLoad;
-                image.UriSource = new Uri(CurrentItem.ImagePath);
+                image.UriSource = new Uri(Path.Combine(ApplicationSettings.ImagePath, CurrentItem.ImagePath));
                 image.EndInit();
                 PeopleImage = image;
                 image = null;
