@@ -19,8 +19,8 @@ namespace PeopleSearch.Shell
         {
             var assemblyPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             var rootPath = assemblyPath.Replace(@"\PeopleSearch\PeopleSearch.Shell\bin\Debug", "");
-            var dataPath = Path.Combine(rootPath, @"Data\People.db");
-            var imagePath = Path.Combine(rootPath, @"Images\");
+            var dataPath = Path.Combine(rootPath, @"Database\People.db");
+            var imagePath = Path.Combine(rootPath, @"ImageServer\");
 
             ApplicationSettings.DataPath = dataPath;
             ApplicationSettings.ImagePath = imagePath;
