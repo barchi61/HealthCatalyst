@@ -7,19 +7,26 @@ using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
+using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.IO;
+using System.Runtime.CompilerServices;
+using System.Windows.Data;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 
 namespace PeopleSearch.PeopleModule.ViewModels
 {
     [Export]
-    public class PeopleMaintViewModel : BindableBase, INavigationAware, IRegionMemberLifetime
+    public class PeopleMaintViewModel : BindableBase, INavigationAware, IRegionMemberLifetime, INotifyPropertyChanged
     {
         private IRegionManager _regionManager;
         private IEventAggregator _eventAggregator;
         private IApplicationCommands _applicationCommands;
+
+        public bool EntityHasChanges => DataService.Context.ChangeTracker.HasChanges();
+
+        
 
         private People _currentItem;
         public People CurrentItem
@@ -27,7 +34,6 @@ namespace PeopleSearch.PeopleModule.ViewModels
             get { return _currentItem; }
             set
             {
-                
                 SetProperty(ref this._currentItem, value);
                 SetImage();
                 OnCurrentItemChanged();
@@ -43,6 +49,7 @@ namespace PeopleSearch.PeopleModule.ViewModels
 
         private void OnCurrentItemChanged()
         {
+            var state = DataService.GetEntityState(CurrentItem);
             CanGetImage = (CurrentItem != null);
             GetImageCommand.IsActive = CanGetImage;
             CanGetImageChanged?.Invoke(this, new EventArgs());
@@ -118,6 +125,13 @@ namespace PeopleSearch.PeopleModule.ViewModels
             UndoPeopleCommand = new DelegateCommand<object>(UndoPeople).ObservesCanExecute(() => CanUndoPeople);
 
             _applicationCommands.GetImageCommand.RegisterCommand(GetImageCommand);
+
+            
+        }
+
+        private void PeopleMaintViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void SetImage()

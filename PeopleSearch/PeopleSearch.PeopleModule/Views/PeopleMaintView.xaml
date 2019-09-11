@@ -17,7 +17,7 @@
                 <Button Command="{Binding AddPeopleCommand}" ToolTip="New" ToolBar.OverflowMode="Never">
                     <Image Source="pack://application:,,,/PeopleSearch.PeopleModule;component/Resources/AddUser_16x.png" Width="20"/>
                 </Button>
-                <Button Command="{Binding SavePeopleCommand}" ToolTip="Save" ToolBar.OverflowMode="Never">
+                <Button Command="{Binding SavePeopleCommand}" IsEnabled="{Binding EntityHasChanges}" ToolTip="Save" ToolBar.OverflowMode="Never">
                     <Image Source="pack://application:,,,/PeopleSearch.PeopleModule;component/Resources/Save_16x.png" Width="20"/>
                 </Button>
                 <Button Command="{Binding UndoPeopleCommand}" ToolTip="Undo" ToolBar.OverflowMode="Never">

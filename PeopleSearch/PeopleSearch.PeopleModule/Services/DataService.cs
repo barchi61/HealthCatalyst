@@ -1,20 +1,30 @@
 ﻿using PeopleSearch.Data.EDM;
+using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.Composition;
+using System.Data.Entity;
 using System.Linq;
 
 namespace PeopleSearch.PeopleModule.Services
 {
-    static class DataService 
+    public static class DataService
     {
+        public static PeopleContext Context = new PeopleContext();
+
+        public static EntityState GetEntityState(People people)
+        {
+            return Context.Entry(people).State;
+        }
+
         public static People GetPeopleById(int peopleId)
         {
-            using (var context = new PeopleContext())
-            {
-                var people = context.People.Where(i => i.PeopleId == peopleId).FirstOrDefault();
-                return people;
-            }
+            Context.Configuration.AutoDetectChangesEnabled = true;
+
+            var people = Context.People.Where(i => i.PeopleId == peopleId).FirstOrDefault();
+            return people;
+
         }
 
         public static ObservableCollection<People> GetData(string searchContext)
@@ -95,5 +105,6 @@ namespace PeopleSearch.PeopleModule.Services
                 context.SaveChanges();
             }
         }
+
     }
 }
