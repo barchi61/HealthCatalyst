@@ -11,15 +11,25 @@ namespace PeopleSearch.PeopleModule.Services
 {
     public static class DataService
     {
-        public static PeopleContext Context = new PeopleContext();
+        public static PeopleContext Context;
 
         public static EntityState GetEntityState(People people)
         {
             return Context.Entry(people).State;
         }
 
-        public static People GetPeopleById(int peopleId)
+        public static People GetPeopleById(long peopleId)
         {
+            Context = new PeopleContext();
+            Context.Configuration.AutoDetectChangesEnabled = true;
+
+            var people = Context.People.Where(i => i.PeopleId == peopleId).FirstOrDefault();
+            return people;
+        }
+
+        public static People UndoChanges(long peopleId)
+        {
+            Context = new PeopleContext();
             Context.Configuration.AutoDetectChangesEnabled = true;
 
             var people = Context.People.Where(i => i.PeopleId == peopleId).FirstOrDefault();
@@ -75,11 +85,11 @@ namespace PeopleSearch.PeopleModule.Services
             return peopleCollection;
         }
 
-        public static void Delete(People people)
+        public static void Delete(long peopleId)
         {
             using (var context = new PeopleContext())
             {
-                var exisitingPeople = context.People.Where(i => i.PeopleId == people.PeopleId).FirstOrDefault();
+                var exisitingPeople = context.People.Where(i => i.PeopleId == peopleId).FirstOrDefault();
                 if (exisitingPeople != null)
                 {
                     context.People.Remove(exisitingPeople);

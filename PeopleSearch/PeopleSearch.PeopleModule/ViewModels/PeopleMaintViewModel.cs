@@ -24,19 +24,33 @@ namespace PeopleSearch.PeopleModule.ViewModels
         private IEventAggregator _eventAggregator;
         private IApplicationCommands _applicationCommands;
 
-        public bool EntityHasChanges => DataService.Context.ChangeTracker.HasChanges();
-
-        
-
+        #region Properties
         private People _currentItem;
         public People CurrentItem
         {
             get { return _currentItem; }
             set
             {
-                SetProperty(ref this._currentItem, value);
-                SetImage();
-                OnCurrentItemChanged();
+                if (_currentItem != value)
+                {
+                    if (_currentItem != null)
+                    {
+                        CurrentItem.PropertyChanged -= CurrentItem_PropertyChanged;
+                    }
+
+                    SetProperty(ref this._currentItem, value);
+                    SetImage();
+                    OnCurrentItemChanged();
+
+                    if (_currentItem != null)
+                    {
+                        CurrentItem.PropertyChanged += CurrentItem_PropertyChanged;
+                    }
+
+                    _undoImagePath = string.Empty;
+                    RaisePropertyChanged(nameof(CurrentItem));
+                    SetToolbarState();
+                }
             }
         }
 
@@ -47,13 +61,7 @@ namespace PeopleSearch.PeopleModule.ViewModels
             set { SetProperty(ref this._peopleImage, value); }
         }
 
-        private void OnCurrentItemChanged()
-        {
-            var state = DataService.GetEntityState(CurrentItem);
-            CanGetImage = (CurrentItem != null);
-            GetImageCommand.IsActive = CanGetImage;
-            CanGetImageChanged?.Invoke(this, new EventArgs());
-        }
+        private string _undoImagePath;
 
         private bool _canGetImage = false;
         public bool CanGetImage
@@ -62,16 +70,12 @@ namespace PeopleSearch.PeopleModule.ViewModels
             set { SetProperty(ref _canGetImage, value); }
         }
 
-        public event EventHandler CanGetImageChanged;
-
         private bool _canAddPeople = false;
         public bool CanAddPeople
         {
             get { return _canAddPeople; }
             set { SetProperty(ref _canAddPeople, value); }
         }
-
-        public event EventHandler CanAddPeopleChanged;
 
         private bool _canDeletePeople = false;
         public bool CanDeletePeople
@@ -80,16 +84,12 @@ namespace PeopleSearch.PeopleModule.ViewModels
             set { SetProperty(ref _canDeletePeople, value); }
         }
 
-        public event EventHandler CanDeletePeopleChanged;
-
         private bool _canSavePeople = false;
         public bool CanSavePeople
         {
             get { return _canSavePeople; }
             set { SetProperty(ref _canSavePeople, value); }
         }
-
-        public event EventHandler CanSavePeopleChanged;
 
         private bool _canUndoPeople = false;
         public bool CanUndoPeople
@@ -98,17 +98,29 @@ namespace PeopleSearch.PeopleModule.ViewModels
             set { SetProperty(ref _canUndoPeople, value); }
         }
 
+        public bool KeepAlive
+        {
+            get { return false; }
+        }
+        #endregion Properties
+
+        #region EventHanlders
+        public event EventHandler CanGetImageChanged;
+        public event EventHandler CanAddPeopleChanged;
+        public event EventHandler CanDeletePeopleChanged;
+        public event EventHandler CanSavePeopleChanged;
+        public event EventHandler CanUndoPeopleChanged;
+        #endregion EventHandlers
+
+        #region DelegateCommands
         public DelegateCommand<object> GetDataCommand { get; private set; }
         public DelegateCommand<object> GetImageCommand { get; private set; }
         public DelegateCommand<object> AddPeopleCommand { get; private set; }
         public DelegateCommand<object> DeletePeopleCommand { get; private set; }
         public DelegateCommand<object> SavePeopleCommand { get; private set; }
         public DelegateCommand<object> UndoPeopleCommand { get; private set; }
+        #endregion DelegateCommands
 
-        public bool KeepAlive
-        {
-            get { return false; }
-        }
 
         [ImportingConstructor]
         public PeopleMaintViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IApplicationCommands applicationCommands)
@@ -117,7 +129,6 @@ namespace PeopleSearch.PeopleModule.ViewModels
             _eventAggregator = eventAggregator;
             _applicationCommands = applicationCommands;
 
-            GetDataCommand = new DelegateCommand<object>(GetData);
             GetImageCommand = new DelegateCommand<object>(GetImage).ObservesCanExecute(() => CanGetImage);
             AddPeopleCommand = new DelegateCommand<object>(AddPeople).ObservesCanExecute(() => CanAddPeople);
             DeletePeopleCommand = new DelegateCommand<object>(DeletePeople).ObservesCanExecute(() => CanDeletePeople);
@@ -125,13 +136,42 @@ namespace PeopleSearch.PeopleModule.ViewModels
             UndoPeopleCommand = new DelegateCommand<object>(UndoPeople).ObservesCanExecute(() => CanUndoPeople);
 
             _applicationCommands.GetImageCommand.RegisterCommand(GetImageCommand);
-
-            
         }
 
-        private void PeopleMaintViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void CurrentItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            throw new NotImplementedException();
+            SetToolbarState();
+        }
+
+        private void OnCurrentItemChanged()
+        {
+            var state = DataService.GetEntityState(CurrentItem);
+            CanGetImage = (CurrentItem != null);
+            GetImageCommand.IsActive = CanGetImage;
+            CanGetImageChanged?.Invoke(this, new EventArgs());
+        }
+
+        private void SetToolbarState()
+        {
+            if (DataService.Context.ChangeTracker.HasChanges())
+            {
+                CanAddPeople = false;
+                CanDeletePeople = false;
+                CanSavePeople = true;
+                CanUndoPeople = true;
+            }
+            else
+            {
+                CanAddPeople = true;
+                CanDeletePeople = true;
+                CanSavePeople = false;
+                CanUndoPeople = false;
+            }
+
+            CanAddPeopleChanged?.Invoke(this, new EventArgs());
+            CanDeletePeopleChanged?.Invoke(this, new EventArgs());
+            CanSavePeopleChanged?.Invoke(this, new EventArgs());
+            CanUndoPeopleChanged?.Invoke(this, new EventArgs());
         }
 
         private void SetImage()
@@ -152,30 +192,6 @@ namespace PeopleSearch.PeopleModule.ViewModels
             }
         }
 
-        private void UndoPeople(object commandArg)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void SavePeople(object commandArg)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void DeletePeople(object commandArg)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void AddPeople(object commandArg)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void GetData(object commandArg)
-        {
-        }
-
         private void GetImage(object commandArg)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -188,10 +204,7 @@ namespace PeopleSearch.PeopleModule.ViewModels
 
                 if (CurrentItem.ImagePath != null && CurrentItem.ImagePath != string.Empty)
                 {
-                    var oldFilePath = Path.Combine(ApplicationSettings.ImagePath, String.Format("{0}", CurrentItem.ImagePath));
-
-                    if (File.Exists(oldFilePath))
-                        File.Delete(oldFilePath);
+                    _undoImagePath = CurrentItem.ImagePath;
                 }
 
                 var newFileName = DateTime.Now.ToString("yyyyMMddHHmmss");
@@ -199,17 +212,48 @@ namespace PeopleSearch.PeopleModule.ViewModels
                 CurrentItem.ImagePath = String.Format("{0}.{1}", newFileName, fileExtension);
 
                 File.Copy(filePath, newFilePath);
-                DataService.SaveChanges(CurrentItem);
 
                 SetImage();
             }
         }
 
+        private void UndoPeople(object commandArg)
+        {
+            if (_undoImagePath != string.Empty)
+               DeleteImage(CurrentItem.ImagePath);
+
+            CurrentItem = DataService.UndoChanges(CurrentItem.PeopleId);
+        }
+
+        private void SavePeople(object commandArg)
+        {
+            DataService.Context.SaveChanges();
+        }
+
+        private void DeletePeople(object commandArg)
+        {
+            DeleteImage(CurrentItem.ImagePath);
+            DataService.Delete(CurrentItem.PeopleId);
+        }
+
+        private void AddPeople(object commandArg)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void DeleteImage(string imagePath)
+        {
+            var path = Path.Combine(ApplicationSettings.ImagePath, imagePath);
+
+            if (File.Exists(path))
+                File.Delete(path);
+        }
+
+        #region NavigationMethods
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             var peopleId = navigationContext.Parameters["PeopleId"];
             if (peopleId != null)
-
                 CurrentItem = DataService.GetPeopleById(Convert.ToInt32(peopleId));
         }
 
@@ -225,6 +269,6 @@ namespace PeopleSearch.PeopleModule.ViewModels
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
         }
+        #endregion NavigationMethods
     }
-
 }

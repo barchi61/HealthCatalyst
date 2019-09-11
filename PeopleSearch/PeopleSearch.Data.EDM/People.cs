@@ -10,19 +10,40 @@
 namespace PeopleSearch.Data.EDM
 {
     using System;
+    using System.ComponentModel;
     using System.Collections.Generic;
     
-    public partial class People
+    public partial class People : INotifyPropertyChanged
     {
-        public long PeopleId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Address1 { get; set; }
-        public string Address2 { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
-        public string Zip { get; set; }
-        public Nullable<int> Age { get; set; }
-        public string ImagePath { get; set; }
+        private long _PeopleId;public long PeopleId { get{ return _PeopleId;} set{if(_PeopleId != value){_PeopleId = value; OnPropertyChanged("PeopleId");}}}
+        private string _FirstName;public string FirstName { get{ return _FirstName;} set{if(_FirstName != value){_FirstName = value; OnPropertyChanged("FirstName");}}}
+        private string _LastName;public string LastName { get{ return _LastName;} set{if(_LastName != value){_LastName = value; OnPropertyChanged("LastName");}}}
+        private string _Address1;public string Address1 { get{ return _Address1;} set{if(_Address1 != value){_Address1 = value; OnPropertyChanged("Address1");}}}
+        private string _Address2;public string Address2 { get{ return _Address2;} set{if(_Address2 != value){_Address2 = value; OnPropertyChanged("Address2");}}}
+        private string _City;public string City { get{ return _City;} set{if(_City != value){_City = value; OnPropertyChanged("City");}}}
+        private string _State;public string State { get{ return _State;} set{if(_State != value){_State = value; OnPropertyChanged("State");}}}
+        private string _Zip;public string Zip { get{ return _Zip;} set{if(_Zip != value){_Zip = value; OnPropertyChanged("Zip");}}}
+        private Nullable<int> _Age;public Nullable<int> Age { get{ return _Age;} set{if(_Age != value){_Age = value; OnPropertyChanged("Age");}}}
+        private string _ImagePath;public string ImagePath { get{ return _ImagePath;} set{if(_ImagePath != value){_ImagePath = value; OnPropertyChanged("ImagePath");}}}
+    
+        #region INotifyPropertyChanged Members
+        public event PropertyChangedEventHandler PropertyChanged;
+    
+        protected void OnPropertyChanged(string propertyName)
+        {
+            OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        }
+    
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            if (PropertyChanged != null)
+            {
+                WhenPropertyChanged(e);
+                PropertyChanged(this, e);
+            }
+        }
+    
+        partial void WhenPropertyChanged(PropertyChangedEventArgs e);
+        #endregion
     }
 }
