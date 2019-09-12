@@ -5,29 +5,53 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
+    xmlns:infra="clr-namespace:PeopleSearch.Infrastructure.Behaviors;assembly=PeopleSearch.Infrastructure"
     x:Class="PeopleSearch.PeopleModule.Views.PeopleMaintView"
     mc:Ignorable="d" 
     prism:ViewModelLocator.AutoWireViewModel="True"
     Background="Transparent">
 
+    <UserControl.Resources>
+        <Style x:Key="ToolButtonStyle" TargetType="Button">
+            <Style.Resources>
+                <Style TargetType="Image">
+                    <Style.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.25" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Style.Resources>
+        </Style>
+        <infra:NullToBoolValueConverter x:Key="NullToBoolValueConverter"/>
+    </UserControl.Resources>
+
+    <Validation.ErrorTemplate>
+        <ControlTemplate>
+            <StackPanel>
+                <AdornedElementPlaceholder/>
+                <TextBlock Text="{Binding [0].ErrorContent}" Foreground="Red"/>
+            </StackPanel>
+        </ControlTemplate>
+    </Validation.ErrorTemplate>
 
     <DockPanel>
         <ToolBarTray DockPanel.Dock="Top" Background="Transparent" Margin="20,10,0,20">
-            <ToolBar BorderThickness="1" BorderBrush="LightGray" ToolBarTray.IsLocked="True" Margin="0,0,0,0" Style="{StaticResource MaintToolBarStyle}">
-                <Button Command="{Binding AddPeopleCommand}" ToolTip="New" ToolBar.OverflowMode="Never">
+            <ToolBar BorderThickness="0" BorderBrush="LightGray" ToolBarTray.IsLocked="True" Margin="0,0,0,0" Style="{StaticResource MaintToolBarStyle}">
+                <Button Command="{Binding AddPeopleCommand}" Style="{DynamicResource ToolButtonStyle}" ToolTip="New" ToolBar.OverflowMode="Never">
                     <Image Source="pack://application:,,,/PeopleSearch.PeopleModule;component/Resources/AddUser_16x.png" Width="20"/>
                 </Button>
-                <Button Command="{Binding SavePeopleCommand}" IsEnabled="{Binding EntityHasChanges}" ToolTip="Save" ToolBar.OverflowMode="Never">
+                <Button Command="{Binding SavePeopleCommand}" Style="{DynamicResource ToolButtonStyle}" ToolTip="Save" ToolBar.OverflowMode="Never">
                     <Image Source="pack://application:,,,/PeopleSearch.PeopleModule;component/Resources/Save_16x.png" Width="20"/>
                 </Button>
-                <Button Command="{Binding UndoPeopleCommand}" ToolTip="Undo" ToolBar.OverflowMode="Never">
+                <Button Command="{Binding UndoPeopleCommand}" Style="{DynamicResource ToolButtonStyle}" ToolTip="Undo" ToolBar.OverflowMode="Never">
                     <Image Source="pack://application:,,,/PeopleSearch.PeopleModule;component/Resources/Undo_16x.png" Width="20" Height="20"/>
                 </Button>
                 <Separator/>
-                <Button Command="{Binding DeletePeopleCommand}" ToolTip="Delete..." ToolBar.OverflowMode="Never">
+                <Button Command="{Binding DeletePeopleCommand}" Style="{DynamicResource ToolButtonStyle}" ToolTip="Delete..." ToolBar.OverflowMode="Never">
                     <Image Source="pack://application:,,,/PeopleSearch.PeopleModule;component/Resources/DeleteUser_16x.png" Width="20"/>
                 </Button>
-                <Button Command="{Binding GetImageCommand}" ToolTip="Load Image..." ToolBar.OverflowMode="Never">
+                <Button Command="{Binding GetImageCommand}" Style="{DynamicResource ToolButtonStyle}" ToolTip="Load Image..." ToolBar.OverflowMode="Never">
                     <Image Source="pack://application:,,,/PeopleSearch.PeopleModule;component/Resources/Camera_16x.png" Width="20" Height="20"/>
                 </Button>
             </ToolBar>
@@ -52,34 +76,49 @@
                 </Grid.RowDefinitions>
 
                 <Label x:Name="FirstNameLabel" Grid.Column="0" Grid.Row="0" Content="First Name" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White" />
-                <TextBox x:Name="FirstNameTextBox" Grid.Column="1" Grid.Row="0" Text="{Binding CurrentItem.FirstName, Mode=TwoWay}" HorizontalAlignment="Left" Height="21" Width="200" Margin="10,0,0,0"/>
+                <TextBox x:Name="FirstNameTextBox" Grid.Column="1" Grid.Row="0" Text="{Binding CurrentItem.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+                    IsEnabled="{Binding Path=CurrentItem ,Converter={StaticResource NullToBoolValueConverter}, ValidatesOnDataErrors=True}"
+                    HorizontalAlignment="Left" Height="21" Width="200" Margin="10,0,0,0">
+
+                </TextBox>
 
                 <Label x:Name="LastNameLabel" Grid.Column="0" Grid.Row="1" Content="Last Name" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White" />
-                <TextBox x:Name="LastNameTextBox" Grid.Column="1" Grid.Row="1" Text="{Binding CurrentItem.LastName, Mode=TwoWay}" HorizontalAlignment="Left" Height="21" Width="200" Margin="10,0,0,0"/>
+                <TextBox x:Name="LastNameTextBox" Grid.Column="1" Grid.Row="1" Text="{Binding CurrentItem.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                    IsEnabled="{Binding Path=CurrentItem ,Converter={StaticResource NullToBoolValueConverter}, ValidatesOnDataErrors=True}"
+                    HorizontalAlignment="Left" Height="21" Width="200" Margin="10,0,0,0"/>
 
                 <Label x:Name="Address1Label" Grid.Column="0" Grid.Row="2" Content="Address 1" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White" />
-                <TextBox x:Name="Address1TextBox" Grid.Column="1" Grid.Row="2" Text="{Binding CurrentItem.Address1, Mode=TwoWay}" HorizontalAlignment="Left" Height="21" Width="200" Margin="10,0,0,0"/>
+                <TextBox x:Name="Address1TextBox" Grid.Column="1" Grid.Row="2" Text="{Binding CurrentItem.Address1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                    IsEnabled="{Binding Path=CurrentItem ,Converter={StaticResource NullToBoolValueConverter}}"
+                    HorizontalAlignment="Left" Height="21" Width="200" Margin="10,0,0,0"/>
 
                 <Label x:Name="Address2Label" Grid.Column="0" Grid.Row="3" Content="Address 2" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White" />
-                <TextBox x:Name="Address2TextBox" Grid.Column="1" Grid.Row="3" Text="{Binding CurrentItem.Address2, Mode=TwoWay}" HorizontalAlignment="Left" Height="21" Width="200" Margin="10,0,0,0"/>
+                <TextBox x:Name="Address2TextBox" Grid.Column="1" Grid.Row="3" Text="{Binding CurrentItem.Address2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                    IsEnabled="{Binding Path=CurrentItem ,Converter={StaticResource NullToBoolValueConverter}}"
+                    HorizontalAlignment="Left" Height="21" Width="200" Margin="10,0,0,0"/>
 
                 <Label x:Name="CityLabel" Grid.Column="0" Grid.Row="4" Content="City" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White" />
-                <TextBox x:Name="CityTextBox" Grid.Column="1" Grid.Row="4" Text="{Binding CurrentItem.City, Mode=TwoWay}" HorizontalAlignment="Left" Height="21" Width="200" Margin="10,0,0,0"/>
+                <TextBox x:Name="CityTextBox" Grid.Column="1" Grid.Row="4" Text="{Binding CurrentItem.City, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                    IsEnabled="{Binding Path=CurrentItem ,Converter={StaticResource NullToBoolValueConverter}}"
+                    HorizontalAlignment="Left" Height="21" Width="200" Margin="10,0,0,0"/>
 
                 <Label x:Name="StateLabel" Grid.Column="0" Grid.Row="5" Content="State" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White" />
-                <TextBox x:Name="StateTextBox" Grid.Column="1" Grid.Row="5" Text="{Binding CurrentItem.State, Mode=TwoWay}" HorizontalAlignment="Left" Height="21" Width="200" Margin="10,0,0,0"/>
+                <TextBox x:Name="StateTextBox" Grid.Column="1" Grid.Row="5" Text="{Binding CurrentItem.State, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                    IsEnabled="{Binding Path=CurrentItem ,Converter={StaticResource NullToBoolValueConverter}}"
+                    HorizontalAlignment="Left" Height="21" Width="200" Margin="10,0,0,0"/>
 
                 <Label x:Name="ZipLabel" Grid.Column="0" Grid.Row="6" Content="Zip Code" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White" />
-                <TextBox x:Name="ZipTextBox" Grid.Column="1" Grid.Row="6" Text="{Binding CurrentItem.Zip, Mode=TwoWay}" HorizontalAlignment="Left" Height="21" Width="100" Margin="10,0,0,0"/>
+                <TextBox x:Name="ZipTextBox" Grid.Column="1" Grid.Row="6" Text="{Binding CurrentItem.Zip, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                    IsEnabled="{Binding Path=CurrentItem ,Converter={StaticResource NullToBoolValueConverter}}"
+                    HorizontalAlignment="Left" Height="21" Width="100" Margin="10,0,0,0"/>
 
                 <Label x:Name="AgeLabel" Grid.Column="0" Grid.Row="7" Content="Age" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White" />
-                <TextBox x:Name="AgeBox" Grid.Column="1" Grid.Row="7" Text="{Binding CurrentItem.Age, Mode=TwoWay}" HorizontalAlignment="Left" Height="21" Width="40" Margin="10,0,0,0"/>
-
+                <TextBox x:Name="AgeBox" Grid.Column="1" Grid.Row="7" Text="{Binding CurrentItem.Age, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                    IsEnabled="{Binding Path=CurrentItem ,Converter={StaticResource NullToBoolValueConverter}}"
+                    HorizontalAlignment="Left" Height="21" Width="40" Margin="10,0,0,0"/>
             </Grid>
 
-            <Image MaxHeight="400" MaxWidth="400" HorizontalAlignment="Center" VerticalAlignment="Top" Source="{Binding PeopleImage, Mode=TwoWay}" Margin="20,0,0,20" />
+            <Image MaxHeight="200" MaxWidth="200" HorizontalAlignment="Center" VerticalAlignment="Top" Source="{Binding PeopleImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="80,0,0,20" />
         </StackPanel>
-
-
     </DockPanel>
 </UserControl>

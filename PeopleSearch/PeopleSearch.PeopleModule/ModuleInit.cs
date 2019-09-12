@@ -1,11 +1,9 @@
 ﻿using PeopleSearch.Infrastructure;
-using PeopleSearch.PeopleModule.Views;
 using PeopleSearch.PeopleModule.ViewModels;
+using PeopleSearch.PeopleModule.Views;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
-using System.IO;
-using System.Reflection;
 
 namespace PeopleSearch.PeopleModule
 {

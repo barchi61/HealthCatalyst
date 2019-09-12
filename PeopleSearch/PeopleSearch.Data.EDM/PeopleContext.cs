@@ -1,8 +1,6 @@
-﻿using System.Data.Entity;
+﻿using PeopleSearch.Infrastructure.Services;
+using System.Data.Entity;
 using System.Data.SQLite;
-using System.IO;
-using System.Reflection;
-using PeopleSearch.Infrastructure.Services;
 
 namespace PeopleSearch.Data.EDM
 {

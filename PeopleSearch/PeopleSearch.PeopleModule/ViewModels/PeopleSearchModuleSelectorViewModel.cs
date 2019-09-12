@@ -1,7 +1,7 @@
 ﻿using PeopleSearch.Infrastructure;
 using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Events;
+using Prism.Mvvm;
 using Prism.Regions;
 using System;
 using System.ComponentModel.Composition;

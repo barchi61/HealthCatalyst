@@ -91,6 +91,7 @@
       <DependentUpon>LoadingAnimation.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Behaviors\ValueConverters.cs" />
     <Compile Include="Services\ApplicationCommands.cs" />
     <Compile Include="Behaviors\AutoPopulateExportedViewsBehavior.cs" />
     <Compile Include="Interfaces\IApplicationCommands.cs" />

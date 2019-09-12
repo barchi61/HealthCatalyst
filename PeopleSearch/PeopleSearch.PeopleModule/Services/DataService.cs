@@ -1,9 +1,7 @@
 ﻿using PeopleSearch.Data.EDM;
-using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.Composition;
 using System.Data.Entity;
 using System.Linq;
 
@@ -15,7 +13,16 @@ namespace PeopleSearch.PeopleModule.Services
 
         public static EntityState GetEntityState(People people)
         {
-            return Context.Entry(people).State;
+            if (people != null)
+                return Context.Entry(people).State;
+            else
+                return EntityState.Detached;
+        }
+
+        public static People AddPeople()
+        {
+            Context = new PeopleContext();
+            return Context.People.Add(new People());
         }
 
         public static People GetPeopleById(long peopleId)
@@ -115,6 +122,5 @@ namespace PeopleSearch.PeopleModule.Services
                 context.SaveChanges();
             }
         }
-
     }
 }

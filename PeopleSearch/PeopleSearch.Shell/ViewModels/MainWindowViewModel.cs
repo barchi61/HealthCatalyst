@@ -1,7 +1,6 @@
 ﻿using PeopleSearch.Infrastructure.Interfaces;
 using Prism.Commands;
 using Prism.Mvvm;
-using System;
 using System.ComponentModel.Composition;
 using System.Windows;
 
