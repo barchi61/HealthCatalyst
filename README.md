@@ -26,3 +26,6 @@ WPF Application
 MVVM Pattern  
 IOC  
 ORM (Entity Framework)  
+
+# Additional Notes
+Exception Handling was applied to data access services but no longging to Windows Event Logs or disk.  
