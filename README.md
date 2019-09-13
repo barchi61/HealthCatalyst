@@ -29,3 +29,4 @@ ORM (Entity Framework)
 
 # Additional Notes
 Exception Handling was applied to data access services but no logging to Windows Event Logs or disk.  
+UI validation adorners for First Name and Last Name are not being invoked correctly.
