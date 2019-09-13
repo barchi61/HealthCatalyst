@@ -2,6 +2,7 @@
 using Prism.Mvvm;
 using Prism.Regions;
 using System.ComponentModel.Composition;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace PeopleSearch.PeopleModule.Views

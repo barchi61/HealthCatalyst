@@ -297,8 +297,11 @@ namespace PeopleSearch.PeopleModule.ViewModels
             HasErrors = (CurrentItem != null && (string.IsNullOrEmpty(CurrentItem.FirstName) || string.IsNullOrEmpty(CurrentItem.LastName)));
             if (HasErrors)
             {
-                ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs("FirstName"));
-                ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs("LastName"));
+                if (string.IsNullOrEmpty(CurrentItem.FirstName))
+                    ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs("FirstName"));
+
+                if (string.IsNullOrEmpty(CurrentItem.LastName))
+                    ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs("LastName"));
             }
             else
             {

@@ -12,6 +12,8 @@
     Background="Transparent">
 
     <UserControl.Resources>
+        <infra:NullToBoolValueConverter x:Key="NullToBoolValueConverter"/>
+
         <Style x:Key="ToolButtonStyle" TargetType="Button">
             <Style.Resources>
                 <Style TargetType="Image">
@@ -23,17 +25,17 @@
                 </Style>
             </Style.Resources>
         </Style>
-        <infra:NullToBoolValueConverter x:Key="NullToBoolValueConverter"/>
-    </UserControl.Resources>
 
-    <Validation.ErrorTemplate>
-        <ControlTemplate>
-            <StackPanel>
-                <AdornedElementPlaceholder/>
-                <TextBlock Text="{Binding [0].ErrorContent}" Foreground="Red"/>
-            </StackPanel>
-        </ControlTemplate>
-    </Validation.ErrorTemplate>
+        <Style x:Key="{x:Type TextBox}" TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip"
+                    Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+                    Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
 
     <DockPanel>
         <ToolBarTray DockPanel.Dock="Top" Background="Transparent" Margin="20,10,0,20">
@@ -77,14 +79,13 @@
 
                 <Label x:Name="FirstNameLabel" Grid.Column="0" Grid.Row="0" Content="First Name" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White" />
                 <TextBox x:Name="FirstNameTextBox" Grid.Column="1" Grid.Row="0" Text="{Binding CurrentItem.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
-                    IsEnabled="{Binding Path=CurrentItem ,Converter={StaticResource NullToBoolValueConverter}, ValidatesOnDataErrors=True}"
+                    IsEnabled="{Binding Path=CurrentItem ,Converter={StaticResource NullToBoolValueConverter}, ValidatesOnDataErrors=True, ValidatesOnNotifyDataErrors=True, NotifyOnValidationError=True}"
                     HorizontalAlignment="Left" Height="21" Width="200" Margin="10,0,0,0">
-
                 </TextBox>
 
                 <Label x:Name="LastNameLabel" Grid.Column="0" Grid.Row="1" Content="Last Name" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White" />
                 <TextBox x:Name="LastNameTextBox" Grid.Column="1" Grid.Row="1" Text="{Binding CurrentItem.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                    IsEnabled="{Binding Path=CurrentItem ,Converter={StaticResource NullToBoolValueConverter}, ValidatesOnDataErrors=True}"
+                    IsEnabled="{Binding Path=CurrentItem ,Converter={StaticResource NullToBoolValueConverter}, ValidatesOnDataErrors=True, ValidatesOnNotifyDataErrors=True, NotifyOnValidationError=True}"
                     HorizontalAlignment="Left" Height="21" Width="200" Margin="10,0,0,0"/>
 
                 <Label x:Name="Address1Label" Grid.Column="0" Grid.Row="2" Content="Address 1" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White" />
